@@ -120,7 +120,6 @@ class Summer {
                 if(count($match)>2) {
                     $anno['method'] = $match[1];
                     $prames = explode(',', $match[2]);
-
                     foreach ($prames as $p) {
 
                         if(preg_match('/(\w+)=["|\'](.+)["|\']/', $p, $pa)){
@@ -130,10 +129,9 @@ class Summer {
                             @$anno['parame'][$pa[1]] = $pa[2];
                         }
                         // 无参情况
-                        if(preg_match('/["|\'](.+)["|\']/', $p, $pa)){
+                        elseif(preg_match('/["|\'](.+)["|\']/', $p, $pa)){
                             @$anno['parame']['value'] = $pa[1];
                         }
-
                     }
                     array_push($annotaLst, $anno);
                 }

@@ -22,6 +22,8 @@ abstract class BaseApplication implements Application{
 
     protected $controller_instance;
 
+    protected $parames = [];
+
     public function __construct($appPath = 'application',$namespace='controllers')
     {
         $this->app_path = $appPath;
@@ -89,6 +91,57 @@ abstract class BaseApplication implements Application{
         $this->setParames($mapRef['parames']);
     }
 
+    private function parsePath($pathinfo,$parttern){
+        //每次匹配清理值
+
+        if(substr($pathinfo,0,1) == '/'){
+            $pathinfo = substr($pathinfo,1);
+        }
+        if(substr($parttern,0,1) == '/'){
+            $parttern = substr($parttern,1);
+        }
+
+        $Lparttern = explode('/',$pathinfo);
+        $Rparttern = explode('/',$parttern);
+
+        $rcount = count($Rparttern);
+
+        for ($i=0;$i<count($Lparttern);$i++){
+            if($i >= $rcount){
+                return false;
+            }
+            // 如果是参数模式 则直接跳过
+            if(preg_match('/^{\w+}$/',$Rparttern[$i])){
+                array_push($this->parames,$Lparttern[$i]);
+                continue;
+            }
+            if($Lparttern[$i] != $Rparttern[$i] ){
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private function findAction($class,$pathinfo){
+        $classRef = new \ReflectionClass($class);
+        $methodLst = $classRef->getMethods(\ReflectionMethod::IS_PUBLIC);
+        foreach ($methodLst as $method){
+
+                $ants = $this->summer->parseMethod($method);
+
+                foreach ($ants as $ant){
+                    if($ant['method'] == 'Route'){
+                        $req_method = isset($ant['parame']['method'])?trim($ant['parame']['method']):'GET';
+                        if($this->parsePath($pathinfo,$ant['parame']['value']) && strtoupper($_SERVER['REQUEST_METHOD'])==strtoupper($req_method) ){
+                            return $method->getName();
+                        }
+                    }
+                }
+
+        }
+        return false;
+    }
+
     public function run()
     {
         // 加载路由文件 实现从注解加载
@@ -97,19 +150,7 @@ abstract class BaseApplication implements Application{
 
             $this->setController($mapRef['class'] . $this->controller_suffix);
 
-            // 类注解器 获取controller
-            $classAnnotation = new ClassAnnotation($this->controller_namespace . '\\' . $this->getController());
-
-            if (!$classAnnotation->isController()) {
-                throw new \Exception('此类不是控制器');
-            }
-
-            // 方法注解器 获取action
-            $methodAnnotation = new MethodAnnotation($this->controller_namespace . '\\' . $this->getController());
-
-            $aciton = $methodAnnotation->findAction($mapRef['pathinfo']);
-
-            $parames = $methodAnnotation->getParames();
+            $aciton = $this->findAction($this->controller_namespace . '\\' . $this->getController(),$mapRef['pathinfo']);
 
             if ($aciton == false) {
                 throw new \Exception('不存在正确的路由映射');
@@ -117,8 +158,9 @@ abstract class BaseApplication implements Application{
 
             $this->setAction($aciton);
 
-            $this->setParames($parames);
+            $this->setParames($this->parames);
         }catch (\Exception $exception){
+            var_dump('404');die;
             $this->loadBaseUrl();
         }finally{
             $this->doRun();

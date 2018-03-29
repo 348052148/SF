@@ -19,7 +19,8 @@ class MethodAnnotation implements Annotation{
      */
     public function findAction($pathinfo){
         //$this->parsePath($pathinfo);
-        foreach ($this->methodAnnotation['@route'] as $annotation){
+        if(@$this->methodAnnotation['@route'])
+        foreach (@$this->methodAnnotation['@route'] as $annotation){
             if($this->parsePath($pathinfo,$annotation['parame']['value'])){
                 return $annotation['method'];
             }
