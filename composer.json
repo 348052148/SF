@@ -1,0 +1,23 @@
+{
+    "name": "smb/sdf_framework",
+    "description": "上门宝PHP框架",
+    "keywords": ["framework","SMB", "server", "socket", "multi", "progress" , "thread"],
+    "homepage": "http://www.ismbao.com",
+    "authors": [
+        {
+            "name": "yuanji",
+            "email": "fenglangyj@139.com"
+        }
+    ],
+
+    "repositories": [
+        {
+            "type": "git",
+            "url": "https://git.oschina.net/ismbao/sdf_framework.git"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.7"
+    }
+
+}
