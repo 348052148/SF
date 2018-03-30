@@ -37,6 +37,7 @@ class Dispatcher {
 
         $instance = self::$controller;
 
+
         call_user_func_array(array(&$instance, $action), $parames);
     }
 }

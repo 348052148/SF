@@ -15,9 +15,13 @@ class Summer {
 
         $this->container = new Container();
         $this->configPath = empty($configPath)?__DIR__.DIRECTORY_SEPARATOR.'runtime'.DIRECTORY_SEPARATOR:$configPath;
-        $this->config = $this->loadConfig($configPath);
+        $this->config = $this->loadConfig($this->configPath);
     }
 
+    public function loadConfigArray($config){
+            $this->autoGenerateConfig();
+            $this->config = array_merge($this->config,$config);
+    }
     /**
      * 读取文件配置
      * @param $cfile
@@ -46,7 +50,11 @@ class Summer {
      * @param array $cDirs
      */
     public function autoGenerateConfig($cDirs=[]){
-        $dirs = array_merge(['application/dao','application/services'],$cDirs);
+        $dirs = array_merge([
+            ['DIR'=>'application/dao','NAMESPACE'=>'dao'],
+            ['DIR'=>'application/services','NAMESPACE'=>'services'],
+            ['DIR'=>'application/controllers','NAMESPACE'=>'controllers']
+        ],$cDirs);
         $this->loadConfigFile($this->generateConfig($dirs));
     }
 
@@ -70,42 +78,90 @@ class Summer {
     }
 
     /**
+     * 遍历一个目录下的配置 遵循psr4规范。
+     * @param $dirs
+     * @param string $namspace
+     * @return array
+     */
+    public function generateConfigAll($dir,$namspace='SDF',$sign=''){
+        if(is_dir($dir)){
+            $handler = opendir($dir);
+            while( ($filename = readdir($handler)) !== false )
+            {
+                if ($filename == "." || $filename == "..") {
+                    continue;
+                }
+
+                //输出文件名
+                $DS ="\\";
+
+
+                if(is_dir($dir.DIRECTORY_SEPARATOR.$filename)){
+                    if(in_array($filename,['Lib','IOC-OLD','Manager','SE'])){
+                        continue;
+                    }
+                    $this->generateConfigAll($dir.DIRECTORY_SEPARATOR.$filename,$namspace.$DS.$filename,$namspace);
+                }
+                if(is_file($dir.DIRECTORY_SEPARATOR.$filename)){
+
+                    //略过linux目录的名字为'.'和‘..'的文件
+                    if($filename != "." && $filename != "..")
+                    {
+                        if(preg_match('/.php$/',$filename) == true) {
+
+                            $name = explode('.', $filename)[0];
+
+
+                            $namespace = $namspace;//implode($DS,array_slice(explode(DIRECTORY_SEPARATOR,$dir),1));
+
+                            $this->config[$sign.$name] = ['class' => $namespace . $DS . $name];
+                        }
+                    }
+
+                }
+
+            }
+        }
+
+        return $this->config;
+    }
+
+    /**
      * 生成配置文件
      */
     private function generateConfig($dirs){
 
-        if(!is_dir($this->configPath)){
-            mkdir($this->configPath,777);
-        }
-
         if(!file_exists($this->configPath."/beans.php")){
-
-            $arr = [];
             foreach ($dirs as $dir){
-                if(is_dir($dir)){
-                    $handler = opendir($dir);
-                    while( ($filename = readdir($handler)) !== false )
-                    {
-                        //略过linux目录的名字为'.'和‘..'的文件
-                        if($filename != "." && $filename != "..")
-                        {
-
-                            $name = explode('.',$filename)[0];
-                            //输出文件名
-                            $DS ="\\";
-
-                            $namespace = implode($DS,array_slice(explode(DIRECTORY_SEPARATOR,$dir),1));
-
-                            $arr[lcfirst($name)] = ['class'=>$namespace.$DS.$name];
-                        }
-                    }
-                }
+                $sign = isset($dir['SIGN'])?$dir['SIGN'] : '';
+                $this->generateConfigAll($dir['DIR'],$dir['NAMESPACE'],$sign);
             }
-            file_put_contents($this->configPath."/beans.php", "<?php \n return ".var_export($arr,true).";");
+            file_put_contents($this->configPath."/beans.php", "<?php \n return ".var_export($this->config,true).";");
         }
+
 
 
         return $this->configPath."/beans.php";
+    }
+
+    /**
+     * 遍历所有beans的注释
+     * @return array
+     */
+    public function getAllBeans(){
+        $annoList = array();
+        foreach ($this->config as $bid => $classMeta){
+            if(class_exists($classMeta['class'])){
+                $clsRef = new \ReflectionClass($classMeta['class']);
+                $classAnno =  $this->parseClass($clsRef);
+                if(!empty($classAnno)){
+                    $annoList[$bid]=$classAnno;
+                }
+
+            }
+
+        }
+        return $annoList;
     }
 
     // 解析文档的注释
@@ -287,12 +343,12 @@ class Summer {
      * @param $class
      * @return bool|object
      */
-    public function get($class){
-        $instance = $this->container->make($class);
+    public function get($class,$scope=""){
+        $instance = $this->container->make($scope.$class);
         if($instance){
             return $instance;
         }else{
-            return $this->instance($class);
+            return $this->instance($scope.$class);
         }
     }
 

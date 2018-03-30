@@ -42,5 +42,36 @@ class SummerFactory {
         return self::$summerInstance;
     }
 
+    public static function getAutoContextAll($cDir){
+        if(self::$summerInstance == null){
+            self::$summerInstance = new Summer();
+        }
+        var_dump(self::$summerInstance->generateConfigAll($cDir));
+
+    }
+
+    public static function getArrayContext(){
+        if(self::$summerInstance == null){
+            self::$summerInstance = new Summer();
+        }
+        $st = time();
+        self::$summerInstance->loadConfigArray([
+            'SDFWebApplication' => [
+                'class' => 'SDF\\Core\\WebApplication'
+            ],
+            'SDFServiceApplication' => [
+                'class' => 'SDF\\Core\\ServiceApplication'
+            ],
+            'SDFMVCRoute' => [
+                'class' => 'SDF\\Route\\MVCRoute'
+            ],
+            'SDFSummer' => [
+                'class' => 'SDF\\IOC\\Summer'
+            ]
+        ]);
+        echo time() - $st;
+        return self::$summerInstance;
+    }
+
 
 }

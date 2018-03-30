@@ -4,7 +4,7 @@ namespace controllers;
 /**
  * Class IndexController
  * @package controllers
- * @controller
+ *
  */
 class IndexController extends \SDF\Controllers\BaseController{
 

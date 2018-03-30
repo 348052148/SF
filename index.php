@@ -31,5 +31,7 @@ define('FCPATH', str_replace(SELF, '', __FILE__));
 
 include "SDF/SMB.php";
 //$app = new \SDF\Core\ServiceApplication('application','services');
-$app = new \SDF\Core\WebApplication();
+$summer = \SDF\IOC\SummerFactory::getArrayContext();
+//
+$app  = $summer->get('WebApplication','SDF');
 $app->run();

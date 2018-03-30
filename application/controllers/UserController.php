@@ -4,7 +4,7 @@ namespace controllers;
 /**
  * Class IndexController
  * @package controllers
- *
+ * @Controller ('users')
  */
 class UserController extends \SDF\Controllers\BaseController{
 
@@ -18,7 +18,7 @@ class UserController extends \SDF\Controllers\BaseController{
      * @Route (value='/users/{id}',method='GET')
      */
     public function getUser(){
-
+        echo '123';
     }
 
     /**

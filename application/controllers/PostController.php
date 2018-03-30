@@ -4,7 +4,7 @@ namespace controllers;
 /**
  * Class IndexController
  * @package controllers
- *
+ * @Controller ('posts')
  */
 class PostController extends \SDF\Controllers\BaseController{
     public function __construct()
@@ -43,6 +43,25 @@ class PostController extends \SDF\Controllers\BaseController{
 
         $this->toJson($list);
     }
+
+    /**
+     * 新建一个 posts
+     * @Route (value='/posts',method='POST')
+     */
+    public function addPost(){
+
+
+    }
+
+    /**
+     * 删除一个post
+     * @Route (value='/posts',method='DELETE')
+     */
+    public function delPost($res,$req,$id){
+
+    }
+
+
 
     /**
      * @Route (value='/posts/{id}',method='GET')

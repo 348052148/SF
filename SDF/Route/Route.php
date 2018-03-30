@@ -1,9 +1,8 @@
 <?php
-namespace SDF\Core;
+namespace SDF\Route;
 
 class Route {
-
-    public static function parseBaseUrl(){
+    public function parseBaseUrl(){
         if(empty($_GET['s'])){
             $_GET['s'] = 'Index/index';
         }
@@ -15,7 +14,18 @@ class Route {
         ];
     }
 
-    public static function parseUrl(){
+    public function parsePathUrl(){
+        if(empty($_GET['s'])){
+            $_GET['s'] = 'Index/index';
+        }
+        $pathInfo = explode('/', trim($_GET['s'],'/'));
+        return [
+            'class' => !empty($pathInfo[0])?$pathInfo[0]:'Index',
+            'pathinfo' => $_GET['s']
+        ];
+    }
+
+    public function parseUrl(){
         $controller = 'Index';
         $action = 'index';
         $parames = [];

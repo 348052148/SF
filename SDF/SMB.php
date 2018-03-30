@@ -2,6 +2,7 @@
 namespace SDF;
 
 use SDF\Core\Config;
+use SDF\IOC\SummerFactory;
 
 class Loader {
 
