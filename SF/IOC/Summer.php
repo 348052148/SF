@@ -14,7 +14,7 @@ class Summer {
     {
 
         $this->container = new Container();
-        $this->configPath = empty($configPath)?__DIR__.DIRECTORY_SEPARATOR.'runtime'.DIRECTORY_SEPARATOR:$configPath;
+        $this->configPath = empty($configPath)?'runtime'.DIRECTORY_SEPARATOR:$configPath;
         $this->config = $this->loadConfig($this->configPath);
     }
 

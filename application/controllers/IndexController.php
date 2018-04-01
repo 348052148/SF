@@ -6,7 +6,7 @@ namespace controllers;
  * @package controllers
  *
  */
-class IndexController extends \SDF\Controllers\BaseController{
+class IndexController extends \SF\Controllers\BaseController{
 
     /**
      * @Route ('/index')

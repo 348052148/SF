@@ -6,7 +6,7 @@ namespace controllers;
  * @package controllers
  * @Controller ('users')
  */
-class UserController extends \SDF\Controllers\BaseController{
+class UserController extends \SF\Controllers\BaseController{
 
     public function __construct()
     {

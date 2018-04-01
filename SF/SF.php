@@ -143,5 +143,4 @@ class SMB {
 
 }
 define('DS',DIRECTORY_SEPARATOR);
-include_once 'SFConf.php';
 SMB::run(__DIR__.'/../');

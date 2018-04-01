@@ -6,7 +6,7 @@ namespace controllers;
  * @package controllers
  * @Controller ('posts')
  */
-class PostController extends \SDF\Controllers\BaseController{
+class PostController extends \SF\Controllers\BaseController{
     public function __construct()
     {
         $publishInfo = [

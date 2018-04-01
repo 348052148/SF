@@ -1,7 +1,7 @@
 <?php
 namespace dao;
 
-class UserDao extends \SDF\DAO\UserDao {
+class UserDao extends \SF\DAO\UserDao {
 
 
 }
