@@ -178,6 +178,8 @@ class Summer {
                 $classAnno = $this->parseMethod($methodRef);
                 if(!empty($classAnno)){
                     foreach ($classAnno as $clsAnno)
+                        //设置action
+                        $clsAnno['action'] = $methodRef->getName();
                         $annoList[$bid][] =  $clsAnno;
                 }
             }

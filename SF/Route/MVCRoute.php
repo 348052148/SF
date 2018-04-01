@@ -74,7 +74,7 @@ class MVCRoute extends Route{
                     $req_method = isset($cls['parame']['method'])?trim($cls['parame']['method']):'GET';
 
                     if($this->parsePath($this->mapRef['pathinfo'],$cls['parame']['value']) && $this->getRequestMethod()==strtoupper($req_method) ){
-
+                        $this->action = $cls['action'];
                         return $className;
                     }
                 }
