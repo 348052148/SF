@@ -29,9 +29,9 @@ define('SELF', pathinfo(__FILE__, PATHINFO_BASENAME));
 #项目根目录
 define('FCPATH', str_replace(SELF, '', __FILE__));
 
-include "SDF/SMB.php";
-//$app = new \SDF\Core\ServiceApplication('application','services');
-$summer = \SDF\IOC\SummerFactory::getArrayContext();
+include "SF/SF.php";
+//$app = new \SF\Core\ServiceApplication('application','services');
+$summer = \SF\IOC\SummerFactory::getArrayContext();
 //
-$app  = $summer->get('WebApplication','SDF');
+$app  = $summer->get('WebApplication','SF');
 $app->run();

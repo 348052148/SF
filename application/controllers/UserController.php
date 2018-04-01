@@ -18,7 +18,17 @@ class UserController extends \SDF\Controllers\BaseController{
      * @Route (value='/users/{id}',method='GET')
      */
     public function getUser(){
-        echo '123';
+        $data = [
+            'id' => '123',
+            'nickname' => '丢丢君',
+            'tel' => '18523922709',
+            'password' => '123456',
+            'balance' => 0,
+            'register_time' => time(), // 注册时间
+            'regitser_addr' => '', /// 注册地址
+            'energy' => 0, // 能量值
+        ];
+        $this->toJson($data);
     }
 
     /**
@@ -26,7 +36,12 @@ class UserController extends \SDF\Controllers\BaseController{
      * @Route (value='/users',method='POST')
      */
     public function addUser(){
-
+        $data = [
+            'id' => '123',
+            'nickname' => '丢丢君',
+            'tel' => '18523922709',
+            'password' => '123456',
+        ];
     }
 
     /**
@@ -34,7 +49,12 @@ class UserController extends \SDF\Controllers\BaseController{
      * @Route (value='/users',method='PUT')
      */
     public function updateUser(){
-
+        $data = [
+            'id' => '123',
+            'nickname' => '丢丢君',
+            'tel' => '18523922709',
+            'password' => '123456',
+        ];
     }
 
     /**
@@ -42,7 +62,12 @@ class UserController extends \SDF\Controllers\BaseController{
      * @Route (value='/users',method='DELETE')
      */
     public function delUser(){
-
+        $data = [
+            'id' => '123',
+            'nickname' => '丢丢君',
+            'tel' => '18523922709',
+            'password' => '123456',
+        ];
     }
 
     /**

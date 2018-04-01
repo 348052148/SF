@@ -49,8 +49,24 @@ class PostController extends \SDF\Controllers\BaseController{
      * @Route (value='/posts',method='POST')
      */
     public function addPost(){
-
-
+        $data = [
+            'publish_uid'=> '123',
+            'used_uid'=> '123',
+            'publish_type'=> 1,//1 失物招领 2 寻物启事
+            'publish_time' => time(),
+            'content' => $_REQUEST['content'],
+            'attachment' => [],
+            'address' => $_REQUEST['address'],
+            'location' => [
+                'lat' => '','lng'=>''
+            ],
+            'staus' => 0, // 0 新创建 1 已认领 (已归还） 2 (已确认) 3
+            'amount' => 0, // 悬赏金额
+            'entity_class' => '交通工具',
+            'looks' => 0,
+            'tags' => ['丢'], // 设置标签
+        ];
+        $this->toJson(['msg'=>'发布成功']);
     }
 
     /**
