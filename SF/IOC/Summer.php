@@ -19,8 +19,8 @@ class Summer {
     }
 
     public function loadConfigArray($config){
+        $this->config = $config;
             $this->autoGenerateConfig();
-            $this->config = array_merge($this->config,$config);
     }
     /**
      * 读取文件配置
@@ -29,7 +29,7 @@ class Summer {
     public function loadConfigFile($cfile){
 
         if(is_file($cfile)&&file_exists($cfile)){
-            $this->config = include "{$cfile}";
+            $this->config += include "{$cfile}";
         }
 
     }
@@ -233,7 +233,6 @@ class Summer {
         }
         $classMeta = $this->config[$alias];
         $classRef = new \ReflectionClass($classMeta['class']);
-
 
         //检查是否可以实例化
         if(!$classRef->isInstantiable()){

@@ -98,7 +98,9 @@ abstract class BaseApplication implements Application{
 
             $aciton = $this->router->findAction();
 
+
             $this->parames = $this->router->getParames();
+
 
             if ($aciton == false) {
                 throw new \Exception('不存在正确的路由映射');

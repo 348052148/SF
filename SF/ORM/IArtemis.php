@@ -2,18 +2,23 @@
 namespace SF\ORM;
 
 interface IArtemis {
-    public function find($filter = array(), array $projection = [], $flag = true);
-    public function findOne(array $filter = [], array $projection = []);
-    public function findOneById($_id, $fields = array());
-    public function findAndModify(array $query, array $update = array(), array $fields = NULL, array $options = NULL);
-    public function distinct($key, array $query = NULL);
-    public function remove(array $criteria = array(), array $options = array());
-    public function update(array $criteria, array $newobj, array $options = array());
-    public function batchUpdate(array $criteria,array $newobj,array $options = array());
-    public function batchInsert(array $a, array $options = array());
-    public function insert(&$a, array $options = array());
-    public function save(&$a);
-    public function aggregate(array $pipeline, array $op = array(), array $pipelineOperators = array());
-    public function count($filter = [],$flag=false);
-    public function MongoID($filter = [],$flag=false);
+    // 保存
+    public function save();
+    // 条件
+    public function where($where);
+    // 获取第一条
+    public function first();
+     // 获取最后一条
+    public function last();
+    // 排序
+    public function order();
+    // 分组
+    public function group();
+    // 获取所有
+    public function get();
+    // 转化数组
+    public function toArray();
+    // 转化json
+    public function toJson();
+
 }

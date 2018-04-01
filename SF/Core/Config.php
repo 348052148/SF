@@ -6,7 +6,6 @@
  */
 
 namespace SF\Core;
-use SF\Common\Dir;
 
 class Config{
     private static $config = array();//配置数据

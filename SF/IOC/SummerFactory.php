@@ -67,7 +67,10 @@ class SummerFactory {
             ],
             'SFSummer' => [
                 'class' => 'SF\\IOC\\Summer'
-            ]
+            ],
+            'SFAnnotaQuery' => [
+                'class' => 'SF\\Route\\AnnotaQuery'
+            ],
         ]);
         //echo time() - $st;
         return self::$summerInstance;

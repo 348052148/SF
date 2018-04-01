@@ -1,5 +1,6 @@
 <?php
 namespace controllers;
+use dao\UserDao;
 
 /**
  * Class IndexController
@@ -37,6 +38,14 @@ class IndexController extends \SF\Controllers\BaseController{
             ]
         ];
         $this->toJson($data);
+    }
+
+    /**
+     * @Route (value="/test")
+     */
+    public function test(){
+        UserDao::where(['key'=>'val'])->first();
+        UserDao::first();
     }
 
 
