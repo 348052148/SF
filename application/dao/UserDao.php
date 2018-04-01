@@ -1,17 +1,13 @@
 <?php
 namespace dao;
 
-use SF\ORM\AbsArtemis;
+use SF\ORM\Artemis;
 
-class UserDao extends AbsArtemis {
+class UserDao extends Artemis {
 
-    public function __construct()
+    public function __setOption()
     {
-        parent::__construct('1', '2');
+        $this->databses = 'user1';
+        $this->table = 'user1';
     }
-
-    protected function add(){
-        echo '123';
-    }
-
 }

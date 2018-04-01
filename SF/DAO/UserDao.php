@@ -8,7 +8,7 @@ class UserDao extends Artemis {
 
     protected function setOption()
     {
-        $this->database = 'lostapp';
-        $this->table = 'user';
+        self::$database = 'lostapp';
+        self::$table = 'user';
     }
 }
