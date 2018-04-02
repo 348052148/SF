@@ -2,7 +2,7 @@
 namespace SF\ORM;
 
 /**
- * Orm 基础
+ * Orm 提供对象的操作方式，不仅仅是对象的操作方式
  * Class Artemis
  * @package SF\ORM
  */
@@ -46,6 +46,11 @@ abstract class Artemis  {
 
     }
 
+    public function find(){
+        $this->fileds = $this->first([])->toArray();
+        return $this;
+    }
+
     public function __get($name)
     {
         if(isset($this->fileds['_id'])&&$name == 'id'){
@@ -74,6 +79,9 @@ abstract class Artemis  {
         if(method_exists(self::$signInstance,$name)){
             $result =  call_user_func_array(array(self::$signInstance, $name), $arguments);
         }
+
+        if($result === false) return false;
+
         if($result==null||is_bool($result)){
             return self::$thisInstance;
         }
@@ -96,12 +104,16 @@ abstract class Artemis  {
             $result =  call_user_func_array(array(self::$signInstance, $name), $arguments);
         }
 
+        if($result === false) return false;
+
         if($result==null||is_bool($result)){
             return self::$thisInstance;
         }
         return $result;
         // TODO: Implement __callStatic() method.
     }
+
+
     public function __invoke()
     {
         // TODO: Implement __invoke() method.

@@ -29,31 +29,17 @@ class MongoArtemis implements IArtemis{
     }
 
     public function findAndUpdate($filter,$data){
-//        $this->current = $this->connection->findAndModify($filter,['$set'=>$data],[]);
-        return $this;
+        $this->current = $this->connection->findAndModify($filter,['$set'=>$data],[]);
     }
     // 条件
     public function where($where){
         $this->where = $where;
-        return $this;
     }
-    // 获取第一条
-    public function first($fields=[]){
-        $this->fields = $fields;
-        $this->current = $this->connection->findOne($this->where,$this->fields,$this->sort);
-        return $this;
-    }
-    // 获取最后一条
-    public function last($fields=[]){
-        $this->fields = $fields;
-        $this->current = $this->connection->findOne($this->where,$this->fields,$this->sort);
-        return $this;
-    }
+
 
     public function orderBy($field, $asc)
     {
         $this->sort[$field] = $asc;
-        return $this;
     }
 
     public function update($newobj)
@@ -74,29 +60,51 @@ class MongoArtemis implements IArtemis{
     // 分组
     public function group($group){
         $this->group = $group;
-        return $this;
     }
     // 获取所有
     public function get($fields=[]){
         $this->fields = $fields;
         $this->current = $this->connection->find($this->where,$this->fields,$this->offset,$this->limit,$this->sort);
-        return $this;
+        if(empty($this->current)){
+            return false;
+        }
+        return true;
+    }
+
+    // 获取第一条
+    public function first($fields=[]){
+        $this->fields = $fields;
+        $this->current = $this->connection->findOne($this->where,$this->fields,$this->sort);
+        if(empty($this->current)){
+            return false;
+        }
+        return true;
+    }
+    // 获取最后一条
+    public function last($fields=[]){
+        $this->fields = $fields;
+        $this->current = $this->connection->findOne($this->where,$this->fields,$this->sort);
+        if(empty($this->current)){
+            return false;
+        }
+        return true;
     }
 
     public function offset($offset)
     {
         $this->offset = $offset;
-        return $this;
     }
 
     public function limit($limit)
     {
         $this->limit = $limit;
-        return $this;
     }
 
     // 转化数组
     public function toArray(){
+        if(empty($this->current)){
+            return false;
+        }
         if(is_array($this->current)){
             $list = [];
             foreach ($this->current as $v){
