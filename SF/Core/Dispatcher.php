@@ -36,8 +36,9 @@ class Dispatcher {
         $parames = array_merge($parames,self::$parames);
 
         $instance = self::$controller;
-
-
-        call_user_func_array(array(&$instance, $action), $parames);
+        ob_clean();
+        ob_start();
+        echo call_user_func_array(array(&$instance, $action), $parames);
+        ob_end_flush();
     }
 }

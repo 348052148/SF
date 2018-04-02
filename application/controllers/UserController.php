@@ -28,7 +28,7 @@ class UserController extends \SF\Controllers\BaseController{
             'regitser_addr' => '', /// 注册地址
             'energy' => 0, // 能量值
         ];
-        $this->toJson($data);
+       return $this->toJson($data);
     }
 
     /**
@@ -91,6 +91,6 @@ class UserController extends \SF\Controllers\BaseController{
             ]);
         }
 
-        $this->toJson($list);
+        return $this->toJson($list);
     }
 }

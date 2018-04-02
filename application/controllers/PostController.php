@@ -41,7 +41,7 @@ class PostController extends \SF\Controllers\BaseController{
             ]);
         }
 
-        $this->toJson($list);
+       return $this->toJson($list);
     }
 
     /**
@@ -66,7 +66,7 @@ class PostController extends \SF\Controllers\BaseController{
             'looks' => 0,
             'tags' => ['丢'], // 设置标签
         ];
-        $this->toJson(['msg'=>'发布成功']);
+        return $this->toJson(['msg'=>'发布成功']);
     }
 
     /**
@@ -95,7 +95,7 @@ class PostController extends \SF\Controllers\BaseController{
             'amount' => '0.00',
             'tags'=>['丢']
         ];
-        $this->toJson($data);
+        return $this->toJson($data);
     }
 
 

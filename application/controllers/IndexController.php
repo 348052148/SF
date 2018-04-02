@@ -23,7 +23,7 @@ class IndexController extends \SF\Controllers\BaseController{
             ],
             //
         ];
-        $this->toJson($data);
+        return $this->toJson($data);
     }
 
     /**
@@ -37,7 +37,7 @@ class IndexController extends \SF\Controllers\BaseController{
                 ['icon'=>'http://img.taopic.com/uploads/allimg/120727/201995-120HG1030762.jpg','title'=>'重金悬赏'],
             ]
         ];
-        $this->toJson($data);
+        return $this->toJson($data);
     }
 
     /**
