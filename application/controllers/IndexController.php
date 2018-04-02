@@ -50,13 +50,4 @@ class IndexController extends \SF\Controllers\BaseController{
 //        var_dump(UserDao::limit(1)->get()->toArray());
     }
 
-
-    private function toJson($data,$code=0,$msg='SUCCESS'){
-        header('Access-Control-Allow-Origin:*');
-        echo json_encode([
-            'code' => $code,
-            'message' => $msg,
-            'data' => $data
-        ]);exit;
-    }
 }
