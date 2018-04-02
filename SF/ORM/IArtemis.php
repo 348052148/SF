@@ -7,15 +7,19 @@ interface IArtemis {
     // 条件
     public function where($where);
     // 获取第一条
-    public function first();
+    public function first($fields=[]);
      // 获取最后一条
-    public function last();
-    // 排序
-    public function order();
+    public function last($fields=[]);
     // 分组
-    public function group();
+    public function group($group);
     // 获取所有
-    public function get();
+    public function get($fields=[]);
+
+    public function offset($offset);
+
+    public function limit($limit);
+
+    public function orderBy($field,$asc);
     // 转化数组
     public function toArray();
     // 转化json

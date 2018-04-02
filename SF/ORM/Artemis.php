@@ -6,15 +6,15 @@ namespace SF\ORM;
  * Class Artemis
  * @package SF\ORM
  */
-class Artemis  {
+abstract class Artemis  {
 
     private $fileds = [];
 
     private static $signInstance = null;
 
-    public $databses;
+    protected $databses;
 
-    public $table;
+    protected $table;
 
     public function __construct()
     {
@@ -22,11 +22,7 @@ class Artemis  {
         $this->__setOption();
     }
 
-    public function __setOption()
-    {
-        $this->databses = 'user';
-        $this->table = 'user';
-    }
+    abstract public function __setOption();
 
     public function __set($name, $value)
     {
@@ -47,7 +43,11 @@ class Artemis  {
     public function __call($name, $arguments)
     {
         if(self::$signInstance == null){
-            self::$signInstance = new MongoArtemis();
+            $artemisRef = new \ReflectionClass(static::class);
+            $i = $artemisRef->newInstanceArgs();
+            $signclss = ArtemisFactory::artemis();
+            $signRef = new \ReflectionClass($signclss);
+            self::$signInstance = $signRef->newInstanceArgs([$i->table,$i->databses]);
         }
         if(method_exists(self::$signInstance,$name)){
             $result =  call_user_func_array(array(self::$signInstance, $name), $arguments);
@@ -61,9 +61,12 @@ class Artemis  {
     //静态
     public static function __callStatic($name, $arguments)
     {
-        $a = new self();
-        var_dump($a->database);
-        self::$signInstance = new MongoArtemis();
+        $artemisRef = new \ReflectionClass(static::class);
+        $i = $artemisRef->newInstanceArgs();
+
+        $signclss = ArtemisFactory::artemis();
+        $signRef = new \ReflectionClass($signclss);
+        self::$signInstance = $signRef->newInstanceArgs([$i->table,$i->databses]);
 
         if(method_exists(self::$signInstance,$name)){
             $result =  call_user_func_array(array(self::$signInstance, $name), $arguments);

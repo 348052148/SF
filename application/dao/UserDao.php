@@ -7,7 +7,7 @@ class UserDao extends Artemis {
 
     public function __setOption()
     {
-        $this->databses = 'user1';
-        $this->table = 'user1';
+        $this->databses = 'base';
+        $this->table = 'enterprise';
     }
 }
