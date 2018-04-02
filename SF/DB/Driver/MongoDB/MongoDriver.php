@@ -20,7 +20,16 @@ class MongoDriver {
     public function __construct($collectionName = '', $databaseName = 'ismbao')
     {
 
-        
+        $this->mongo_config =[
+            'dsn' => 'mongodb://10.29.89.29:27017' ,//连接
+            'option'=> array(
+                'connect' => true,//是否使用同一个连接，默认是true
+                'username'=>'root',//用户名
+                'password'=>'Awudei1O',//用户密码
+                'db'=>'admin',//用户库
+            )
+        ];
+
         $this->databaseName = $databaseName;
 
         if (empty($collectionName)) {
@@ -79,25 +88,22 @@ class MongoDriver {
         $this->databaseName = $this->databaseName??'ismbao';
         $command = new Command($cmd);//mongodb各种命令详解：https://docs.mongodb.com/manual/reference/command/nav-crud/
         $cursor = self::$Manager->executeCommand($this->databaseName, $command,$readPreference);
-        $result = current($cursor->toArray());
-        if ( ! isset($result->n) || ! (is_integer($result->n) || is_float($result->n))) {
-            throw new \Exception('count command did not return a numeric "n" value');
-        }
-        return (integer) $result->n;
+
+        return $cursor;
     }
 
     public function insert(&$document, array $options = [],WriteConcern $writeConcern = NULL) {
         if(empty($writeConcern)){
             $writeConcern = new WriteConcern(WriteConcern::MAJORITY, 5000);
         }
-        $bulk = new BulkWrite(['ordered'=>true]);
+        $bulk = new BulkWrite($options);
         $insertId = $bulk->insert($document);
         if(!empty($insertId)) $document['_id'] = $insertId;
         $collectionName = $this->collectionName;
         $databaseName = $this->databaseName??'ismbao';
         $writeResult  = self::$Manager->executeBulkWrite($databaseName.'.'.$collectionName, $bulk, $writeConcern);
 
-        return $writeResult;
+        return $insertId;
     }
 
     public function update($filter,$newObj, array $options = ['multi' => false,'upsert' =>true],WriteConcern $writeConcern = NULL) {

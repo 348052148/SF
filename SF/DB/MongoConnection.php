@@ -18,7 +18,7 @@ class MongoConnection implements IConnection{
 
     public function find($filter,$projection=[],$skip=0,$limit=1,$sort=[])
     {
-        return $this->driver->query($filter,$projection,$limit,$skip,$sort);
+        return $this->driver->query($filter,$projection,$limit,$skip,$sort)->toArray();
     }
 
     public function findAndModify($filter,$update,$fields=[],$sort=[],$option=['new'=>true,'upsert'=>true])
@@ -33,11 +33,11 @@ class MongoConnection implements IConnection{
 
         $cmd = array_merge($cmd,$option);
 
-      return $this->driver->command($cmd);
+      return $this->driver->command($cmd)->toArray();
     }
     public function findOne($filter,$projection=[],$sort=[])
     {
-       return $this->driver->query($filter,$projection,1,0,$sort);
+       return current($this->driver->query($filter,$projection,1,0,$sort)->toArray());
     }
     public function insert(&$document)
     {

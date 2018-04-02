@@ -28,8 +28,8 @@ class MongoArtemis implements IArtemis{
         $this->connection =  MongoDatabaseSource::getConnection($this->database,$this->table);
     }
 
-    public function save(){
-        
+    public function findAndUpdate($filter,$data){
+//        $this->current = $this->connection->findAndModify($filter,['$set'=>$data],[]);
         return $this;
     }
     // 条件
@@ -56,6 +56,21 @@ class MongoArtemis implements IArtemis{
         return $this;
     }
 
+    public function update($newobj)
+    {
+        return $this->connection->update($this->where,['$set'=>$newobj]);
+    }
+
+    public function delete()
+    {
+        return $this->connection->delete($this->where);
+    }
+
+    public function insert($data)
+    {
+        return $this->connection->insert($data);
+    }
+
     // 分组
     public function group($group){
         $this->group = $group;
@@ -71,19 +86,43 @@ class MongoArtemis implements IArtemis{
     public function offset($offset)
     {
         $this->offset = $offset;
+        return $this;
     }
 
     public function limit($limit)
     {
         $this->limit = $limit;
+        return $this;
     }
 
     // 转化数组
     public function toArray(){
-       return $this->current->toArray();
+        if(is_array($this->current)){
+            $list = [];
+            foreach ($this->current as $v){
+                $list[] = $this->object_array($this->current);
+            }
+            return $list;
+        }
+       return $this->object_array($this->current);
     }
     // 转化json
     public function toJson(){
 
+    }
+
+    function object_array($array)
+    {
+        if (is_object($array)) {
+            $array = (array)$array;
+        }
+        if (is_array($array)) {
+            foreach ($array as $key => $value) {
+                if (!is_a($value, 'MongoDB\BSON\ObjectId')) {
+                    $array[$key] = $this->object_array($value);
+                }
+            }
+        }
+        return $array;
     }
 }

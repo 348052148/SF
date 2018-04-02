@@ -3,7 +3,7 @@ namespace SF\ORM;
 
 interface IArtemis {
     // 保存
-    public function save();
+    public function findAndUpdate($filter,$data);
     // 条件
     public function where($where);
     // 获取第一条
@@ -18,6 +18,12 @@ interface IArtemis {
     public function offset($offset);
 
     public function limit($limit);
+
+    public function update($newobj);
+
+    public function insert($data);
+
+    public function delete();
 
     public function orderBy($field,$asc);
     // 转化数组

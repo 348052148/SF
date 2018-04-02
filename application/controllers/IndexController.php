@@ -44,7 +44,11 @@ class IndexController extends \SF\Controllers\BaseController{
      * @Route (value="/test")
      */
     public function test(){
-        var_dump(UserDao::where(['enterprise_name'=>'拳拳有限公司'])->first()->toArray());
+        $userDao = new UserDao();
+        $userDao->a = '12';
+        $userDao->save();
+        var_dump($userDao->id);
+//        var_dump(UserDao::limit(1)->get()->toArray());
     }
 
 
