@@ -27,6 +27,17 @@ class IndexController extends \SF\Controllers\BaseController{
     }
 
     /**
+     * @Route ("/sids")
+     */
+    public function getSid(){
+        $data = [
+            'sid' => uniqid(),
+            'time' => time()
+        ];
+        return $this->toJson($data);
+    }
+
+    /**
      * @Route (value="/navs")
      */
     public function nav(){
