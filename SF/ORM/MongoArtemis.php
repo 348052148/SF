@@ -1,6 +1,7 @@
 <?php
 namespace SF\ORM;
 
+use MongoDB\BSON\ObjectId;
 use SF\DB\MongoDatabaseSource;
 
 class MongoArtemis implements IArtemis{
@@ -90,6 +91,12 @@ class MongoArtemis implements IArtemis{
         return true;
     }
 
+    public function format($id){
+        if(is_object($id)) return $id;
+
+        return new ObjectId($id);
+    }
+
     public function offset($offset)
     {
         $this->offset = $offset;
@@ -108,7 +115,7 @@ class MongoArtemis implements IArtemis{
         if(is_array($this->current)){
             $list = [];
             foreach ($this->current as $v){
-                $list[] = $this->object_array($this->current);
+                $list[] = $this->object_array($v);
             }
             return $list;
         }

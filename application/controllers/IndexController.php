@@ -3,6 +3,7 @@ namespace controllers;
 use dao\UserDao;
 
 /**
+ * 想法。 可以在类里直接进行插件的注入 以扩展控制器功能。
  * Class IndexController
  * @package controllers
  *

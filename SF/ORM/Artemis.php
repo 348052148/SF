@@ -91,10 +91,8 @@ abstract class Artemis  {
     //静态
     public static function __callStatic($name, $arguments)
     {
-        if(self::$thisInstance == null){
-            $artemisRef = new \ReflectionClass(static::class);
-            self::$thisInstance = $artemisRef->newInstanceArgs();
-        }
+        $artemisRef = new \ReflectionClass(static::class);
+        self::$thisInstance = $artemisRef->newInstanceArgs();
 
         $signclss = ArtemisFactory::artemis();
         $signRef = new \ReflectionClass($signclss);
