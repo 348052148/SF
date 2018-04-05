@@ -1,16 +1,19 @@
 <?php
 namespace controllers;
+use dao\CategoryDao;
+use dao\PostDao;
 
-/**
- * Class IndexController
- * @package controllers
- * @Controller ('users')
- */
+
 class UserController extends \SF\Controllers\BaseController{
 
     public function __construct()
     {
+        $categoryLst =  CategoryDao::get()->toArray();
 
+        $this->categoryArr = [];
+        foreach ($categoryLst as $category){
+            $this->categoryArr[$category['_id'].""] = $category['name'];
+        }
     }
 
     /**
@@ -76,19 +79,41 @@ class UserController extends \SF\Controllers\BaseController{
      */
     public function getPostByUser($req,$res,$id){
 
+//        $data = [
+//            'publish_uid'=> $_REQUEST['puid'],
+//            'used_uid'=> '',
+//            'publish_type'=> $publish_type,//1 失物招领 2 寻物启事
+//            'publish_time' => time(),
+//            'content' => $_REQUEST['content'],
+//            'attachment' => [],
+//            'address' => $_REQUEST['address'],
+//            'addressDetail' => $_REQUEST['addressDetail'],
+//            'location' => [
+//                'lat' => '','lng'=>''
+//            ],
+//            'staus' => 0, // 0 新创建 1 已认领 (已归还） 2 (已确认) 3
+//            'amount' => $_REQUEST['amount'], // 悬赏金额
+//            'entity_class' => $_REQUEST['entity_class'],
+//            'looks' => 0,
+//            'tags' => [], // 设置标签
+//        ];
+
         $page = empty($_REQUEST['page'])?1:$_REQUEST['page'];
+        $uid = $id;
         $limit = 3;
+        $publish_type = intval($_REQUEST['publish_type']);
         $list = [];
-        for($i=0;$i < 3;$i++ ) {
-            array_push($list,[
-                'publish'=> ['nickname'=>'丢丢君'],
-                'publish_time' => '一天前',
-                'content' => '本人在两口丢失一张公交卡，联系电话18523431231',
-                'attachment' => ['http://img.taopic.com/uploads/allimg/120727/201995-120HG1030762.jpg'],
-                'address' => '枇杷山正街84号',
-                'type' => '交通工具',
-                'looks' => 20,
-            ]);
+        $postMode =  PostDao::where(['publish_uid'=>$uid,'publish_type'=>$publish_type])->offset(($page-1)*$limit)->limit($limit)->get();
+
+        if($postMode == false){
+            return $this->toJson([],-1,'no data');
+        }
+        $postLst = $postMode->toArray();
+        foreach ($postLst as $post){
+            $post['publish_time'] = date('Y-m-d H:i:s',$post['publish_time']);
+            $post['entity_class'] = $this->categoryArr[$post['entity_class']];
+            $post['id'] = $post['_id']."";
+            $list[] = $post;
         }
 
         return $this->toJson($list);
