@@ -269,6 +269,27 @@ class Summer {
         return $instance;
     }
 
+    /**
+     * 类注入
+     * @param \ReflectionClass $classRef
+     * @param $instance
+     */
+    private function classDi(\ReflectionClass $classRef,&$instance){
+        $annoLst = $this->parseAnnotation($classRef->getDocComment());
+
+        foreach ($annoLst as $a){
+
+            if($a['method'] == 'Plugs'){
+                if(isset($a['parame']['value'])){
+                    $ref = $a['parame']['value'];
+                    if($classRef->hasMethod('pushPlugs')){
+                        call_user_func_array([$instance,'pushPlugs'],$ref);
+                    }
+                }
+            }
+
+        }
+    }
 
     /**
      * 方法注入

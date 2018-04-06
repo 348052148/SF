@@ -3,7 +3,10 @@ namespace controllers;
 use dao\CategoryDao;
 use dao\PostDao;
 
-
+/**
+ * Class PostController
+ * @package controllers
+ */
 class PostController extends \SF\Controllers\BaseController{
 
     // 列表
@@ -122,8 +125,9 @@ class PostController extends \SF\Controllers\BaseController{
      * 删除一个post
      * @Route (value='/posts',method='DELETE')
      */
-    public function delPost($res,$req,$id){
-
+    public function delPost($res,$req){
+        $a = 1/0;
+        var_dump('DELETE');
     }
 
     /**

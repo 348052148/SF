@@ -6,6 +6,10 @@ class BaseController {
 
     protected $plugsLst = [];
 
+    public function pushPlugs($plugs){
+        return array_push($this->plugsLst,$plugs);
+    }
+
     public function __call($name, $arguments)
     {
         $plugs = PlugFactory::getPlugs();
