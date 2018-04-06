@@ -74,30 +74,36 @@ class UserController extends \SF\Controllers\BaseController{
     }
 
     /**
-     * 获取某个用户的posts列表
+     * 获取用户的交易列表
+     * @Route (value='/users/{id}/accounts',method='GET')
+     */
+    public function getGPostByUser($req,$res,$id){
+        $page = empty($_REQUEST['page'])?1:$_REQUEST['page'];
+        $uid = $id;
+        $publish_type = intval($_REQUEST['publish_type']);
+        $limit = 3;
+        $list = [];
+        $postMode =  PostDao::where(['used_uid'=>$uid,'publish_type'=>$publish_type])->offset(($page-1)*$limit)->limit($limit)->get();
+
+        if($postMode == false){
+            return $this->toJson([],-1,'no data');
+        }
+        $postLst = $postMode->toArray();
+        foreach ($postLst as $post){
+            $post['publish_time'] = date('Y-m-d H:i:s',$post['publish_time']);
+            $post['entity_class'] = $this->categoryArr[$post['entity_class']];
+            $post['id'] = $post['_id']."";
+            $list[] = $post;
+        }
+
+        return $this->toJson($list);
+    }
+
+    /**
+     * 获取某个用户的发布的posts列表
      * @Route (value='/users/{id}/posts',method='GET')
      */
     public function getPostByUser($req,$res,$id){
-
-//        $data = [
-//            'publish_uid'=> $_REQUEST['puid'],
-//            'used_uid'=> '',
-//            'publish_type'=> $publish_type,//1 失物招领 2 寻物启事
-//            'publish_time' => time(),
-//            'content' => $_REQUEST['content'],
-//            'attachment' => [],
-//            'address' => $_REQUEST['address'],
-//            'addressDetail' => $_REQUEST['addressDetail'],
-//            'location' => [
-//                'lat' => '','lng'=>''
-//            ],
-//            'staus' => 0, // 0 新创建 1 已认领 (已归还） 2 (已确认) 3
-//            'amount' => $_REQUEST['amount'], // 悬赏金额
-//            'entity_class' => $_REQUEST['entity_class'],
-//            'looks' => 0,
-//            'tags' => [], // 设置标签
-//        ];
-
         $page = empty($_REQUEST['page'])?1:$_REQUEST['page'];
         $uid = $id;
         $limit = 3;

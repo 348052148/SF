@@ -47,7 +47,9 @@ abstract class Artemis  {
     }
 
     public function find(){
-        $this->fileds = $this->first([])->toArray();
+        $mode = $this->first([]);
+        if(!$mode) return false;
+        $this->fileds = $mode->toArray();
         return $this;
     }
 

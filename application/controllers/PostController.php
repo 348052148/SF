@@ -36,12 +36,16 @@ class PostController extends \SF\Controllers\BaseController{
         $postLst = $postMode->toArray();
 
         foreach ($postLst as $post){
+            $imgs = [];
+            foreach ($post['attachment'] as $attachment){
+                $imgs[] = 'http://sys.ismbao.com.cn/'.$attachment;
+            }
                 array_push($list,[
                     'id' => $post['_id']."",
                     'publish'=> ['nickname'=>'丢丢君'],
                     'publish_time' => '一天前',
                     'content' => $post['content'],
-                    'attachment' => ['http://img.taopic.com/uploads/allimg/120727/201995-120HG1030762.jpg'],
+                    'attachment' => $imgs,//['http://img.taopic.com/uploads/allimg/120727/201995-120HG1030762.jpg'],
                     'address' => $post['address'],
                     'type' => $this->categoryArr[$post['entity_class']],
                     'looks' => $post['looks'],
@@ -56,10 +60,12 @@ class PostController extends \SF\Controllers\BaseController{
      * @Route (value='/posts',method='POST')
      */
     public function addPost(){
+
         if($_REQUEST['publish_type'] == 1){
             $publish_type= 1;
             $tag = '拾';
         }
+
         if($_REQUEST['publish_type'] == 2){
             $publish_type= 2;
             $tag = '丢';
@@ -76,7 +82,7 @@ class PostController extends \SF\Controllers\BaseController{
             'location' => [
                 'lat' => '','lng'=>''
             ],
-            'staus' => 0, // 0 新创建 1 已认领 (已归还） 2 (已确认) 3
+            'status' => 0, // 0 新创建 1 已认领 (已归还） 2 (已确认) 3
             'amount' => $_REQUEST['amount'], // 悬赏金额
             'entity_class' => $_REQUEST['entity_class'],
             'looks' => 0,
@@ -84,9 +90,32 @@ class PostController extends \SF\Controllers\BaseController{
         ];
         array_push($data['tags'],$tag);
 
+        foreach ($_FILES as $file){
+            if(!is_dir("upload")){
+                mkdir("upload");
+            }
+            move_uploaded_file($file["tmp_name"], "upload/" . $file["name"]);
+            array_push($data['attachment'],"upload/" . $file["name"]);
+        }
+
         $id = PostDao::insert($data);
 
         return $this->toJson(['id'=>$id.""],0,'发布成功');
+    }
+
+    /**
+     * @Route (value='/posts/{pid}',method='PUT')
+     */
+    public function updatePost($res,$req,$pid){
+        $status = $_REQUEST['status'];
+        $uid = $_REQUEST['uid'];
+        PostDao::where(['_id'=>PostDao::format($pid)])->update(
+            [
+                'used_uid' => $uid,
+                'status' => intval($status),
+            ]
+        );
+        return $this->toJson(['id'=>$pid.""],0,'成功');
     }
 
     /**
@@ -108,6 +137,13 @@ class PostController extends \SF\Controllers\BaseController{
         return $this->toJson([]);
     }
 
+    /**
+     * @Route (value='/posts',method="DELETE")
+     */
+    public function deleteAll(){
+        var_dump(123);
+
+    }
 
 
     /**
@@ -116,16 +152,23 @@ class PostController extends \SF\Controllers\BaseController{
     public function postsByid($req,$res,$id){
 
        $post =  PostDao::where(['_id'=>PostDao::format($id)])->find()->toArray();
+       $imgs = [];
+       foreach ($post['attachment'] as $attachment){
+           $imgs[] = 'http://sys.ismbao.com.cn/'.$attachment;
+       }
         $data = [
+            'id' => $post['_id']."",
             'publish'=> ['nickname'=>'丢丢君'],
+            'publish_type' => $post['publish_type'],
             'publish_time' => date('Y-m-d H:i:s',$post['publish_time']),
             'content' => $post['content'],
-            'attachment' => ['http://img.taopic.com/uploads/allimg/120727/201995-120HG1030762.jpg'],
+            'attachment' => $imgs,//['http://img.taopic.com/uploads/allimg/120727/201995-120HG1030762.jpg'],
             'address' => $post['address'],
             'type' => $this->categoryArr[$post['entity_class']],
             'looks' => $post['looks'],
             'amount' => $post['amount'],
-            'tags'=> @$post['tags']
+            'tags'=> @$post['tags'],
+            'status' => $post['status']
         ];
         return $this->toJson($data);
     }
