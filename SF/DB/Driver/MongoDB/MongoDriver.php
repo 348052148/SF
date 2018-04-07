@@ -20,16 +20,6 @@ class MongoDriver {
     public function __construct($collectionName = '', $databaseName = 'ismbao')
     {
 
-        $this->mongo_config =[
-            'dsn' => 'mongodb://10.29.89.29:27017' ,//连接
-            'option'=> array(
-                'connect' => true,//是否使用同一个连接，默认是true
-                'username'=>'root',//用户名
-                'password'=>'Awudei1O',//用户密码
-                'db'=>'admin',//用户库
-            )
-        ];
-
         $this->databaseName = $databaseName;
 
         if (empty($collectionName)) {
