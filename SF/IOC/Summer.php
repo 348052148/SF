@@ -177,10 +177,11 @@ class Summer {
             foreach ($methodsRef as $methodRef){
                 $classAnno = $this->parseMethod($methodRef);
                 if(!empty($classAnno)){
-                    foreach ($classAnno as $clsAnno)
+                    foreach ($classAnno as $clsAnno) {
                         //设置action
                         $clsAnno['action'] = $methodRef->getName();
-                        $annoList[$bid][] =  $clsAnno;
+                        $annoList[$bid][] = $clsAnno;
+                    }
                 }
             }
         }
@@ -262,11 +263,12 @@ class Summer {
 
         //todo 方法注入
         $this->methodDi($classRef,$instance);
+
         //todo 属性注入
         $this->propertyDi($classRef,$instance);
 
         $this->container->bind($alias,$instance);
-        return $instance;
+        return new Proxy($classRef,$instance);
     }
 
     /**
@@ -308,6 +310,7 @@ class Summer {
 
             }
         }
+
 
     }
 

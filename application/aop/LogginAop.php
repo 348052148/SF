@@ -16,6 +16,10 @@ class LogginAop {
 
     }
 
+    public function before(){
+        echo 'before';
+    }
+
     /**
      * @pointcut (value='controllers\$.$')
      */

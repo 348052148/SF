@@ -23,6 +23,11 @@ class AnnotaQuery implements QueryController{
         return $this->parames;
     }
 
+    /**
+     * 寻找action
+     * @param $mapRef
+     * @return bool|string
+     */
     public function findaAction($mapRef)
     {
         if($this->action!=null && is_string($this->action)){
@@ -31,6 +36,9 @@ class AnnotaQuery implements QueryController{
 
         $pathinfo = $mapRef['pathinfo'];
         $classRef = new \ReflectionClass($this->nameSpace.'\\'.$this->findController($mapRef));
+
+        $mould = $this->getModule($classRef);
+
         $methodLst = $classRef->getMethods(\ReflectionMethod::IS_PUBLIC);
         foreach ($methodLst as $method){
 
@@ -41,7 +49,7 @@ class AnnotaQuery implements QueryController{
 
                     $req_method = isset($ant['parame']['method'])?trim($ant['parame']['method']):'GET';
 
-                    if($this->parsePath($pathinfo,$ant['parame']['value']) && $this->getRequestMethod()==strtoupper($req_method) ){
+                    if($this->parsePath($pathinfo,$mould.$ant['parame']['value']) && $this->getRequestMethod()==strtoupper($req_method) ){
 
                         return $method->getName();
                     }
@@ -51,6 +59,24 @@ class AnnotaQuery implements QueryController{
         }
         return false;
     }
+
+    private function getModule(\ReflectionClass $classRef){
+        $mould = '';
+        $classAnts = $this->summer->parseClass($classRef);
+
+        foreach ($classAnts as $ant){
+            if($ant['method'] == 'Controller'){
+                $mould = '/'.$ant['parame']['value'];
+            }
+        }
+        return $mould;
+    }
+
+    /**
+     * 寻找controller
+     * @param $mapRef
+     * @return int|null|string
+     */
     public function findController($mapRef)
     {
         if($this->controller!=null&&is_string($this->controller)){
@@ -61,11 +87,14 @@ class AnnotaQuery implements QueryController{
         }
         foreach ($this->classLst as $className=> $class) {
             foreach ($class as  $cls) {
+
                 if (isset($cls['method']) && $cls['method'] == 'Route'){
 
                     $req_method = isset($cls['parame']['method'])?trim($cls['parame']['method']):'GET';
+                    // todo 获取模块
+                    $module = $this->getModule(new \ReflectionClass($this->nameSpace.'\\'.$className));
 
-                    if($this->parsePath($mapRef['pathinfo'],$cls['parame']['value']) && $this->getRequestMethod()==strtoupper($req_method) ){
+                    if($this->parsePath($mapRef['pathinfo'],$module.$cls['parame']['value']) && $this->getRequestMethod()==strtoupper($req_method) ){
                         $this->action = $cls['action'];
 
                         $this->controller = $className;
