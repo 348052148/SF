@@ -1,9 +1,10 @@
 <?php
 namespace UI\controllers;
 
+use SF\Controllers\BaseController;
 use UI\dtos\RequestDto;
 
-class PostController {
+class CartController extends BaseController {
 
     /**
      * @route ('/posts',method='POST')
@@ -15,6 +16,6 @@ class PostController {
         $PostDto->content = $_REQUEST['content']; //发布内容
         //请求服务
 
-
     }
+
 }

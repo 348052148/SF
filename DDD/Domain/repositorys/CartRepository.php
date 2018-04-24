@@ -4,7 +4,7 @@ namespace DDD\Domain\repositorys;
 use DDD\Domain\user\User;
 use SF\ORM\Artemis;
 
-class UserRepository extends Artemis{
+class CartRepository extends Artemis{
 
     public function __setOption()
     {
